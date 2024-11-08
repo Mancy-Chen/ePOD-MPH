@@ -11,14 +11,12 @@
 close all
 clear all
 
-%maindir='/home/caan/data/epod/tbss/stats'
-maindir='/mnt/l-disk/Projects/epod/ePOD-MPH/analysis/DTI/stats'
+%maindir='.../tbss/stats'
+maindir='.../analysis/DTI/stats'
 cd(maindir)
 
 % specify FSL-atlas folder
-%fsldir='/opt/amc/fsl-5.0.6/data/atlases/JHU'
-fsldir='/packages/fsl/5.0.9/data/atlases/JHU'
-fsldir='/scratch/opt/fsl-5.0.9/data/atlases/JHU'
+fsldir='.../fsl-5.0.9/data/atlases/JHU'
 
 % select thresholded probability file
 tractsfile=fullfile(fsldir,'JHU-ICBM-tracts-maxprob-thr25-1mm.nii.gz')
