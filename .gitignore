@@ -1,0 +1,15 @@
+.*
+*.nii.gz
+*.nii.gz~
+*.nii
+*.mgz
+*.log
+*.csv
+*.nrrd
+*.out
+!.gitignore
+*.png
+*.pptx
+*.html
+*.npy
+*.xlsx
