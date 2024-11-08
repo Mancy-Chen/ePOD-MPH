@@ -1,0 +1,266 @@
+12_ter2_T1_DTI: add pbounds = {'selector__estimator__n_estimators': Integer(10, 200),
+    'selector__estimator__max_depth': Integer(3, 50),
+    'selector__estimator__min_samples_split': Integer(2, 20),...}
+
+13_sensitivity_tier2_T1_DTI: use 44 patients for input (excluded 3 outliers)
+
+14_tier2_T1_DTI: add BayesSearchCV n_iter = 50. Still using 47 patients, CGI 6 as outcome.
+
+15_tier2_T1_DTI: add BayesSearchCV n_iter = 100. Still using 47 patients, CGI 6 as outcome.
+
+16_tier2_T1_DTI_age_corrected: add age as covariate using linear regression, delete ComBat and include scaler_regress as part of the pipeline, add weight in XGBoost.
+
+17_tier2_T1_DTI: modify the range of hyperparamenter in XGBoost, replace the StandardScaler with RobustScaler and add its hyperparameter in pbounds, delete feature selection, add age as one of the features in XGboost, add feature frequency calculation in XGBoost classifer.
+
+18_tier2_T1_DTI_neuroHarmonize: add neuroHarmonize, add estimate time finished, add covariate correlation test(Spearman), add binomial test.
+
+19_tier2_T1_DTI_ComBat_GAMs: add ComBat & GAMs in pipeline for BayesSearchCV, using CGI 6
+
+20_CGI7_tier2_T1_DTI_ComBay_GAMs: add ComBat & GAMs in pipeline for BayesSearchCV, using CGI 7 
+
+21_CGI6_tier2_ComBat_GAMs_NoRefit: No refit the best_pipeline after BayesSearchCV, change RFE algorigthm from RandomForestClassifier to CustomXGBClassifier, using auc in CustomXGBClassifier and roc_auc in BayesSearchCV.
+   [BUG]Scaler is RobustScaler, not CustomScaler, need to rerun.
+
+22_CGI7_tier2_ComBat_GAMs_NoRefit: Using CGI 7.
+   [BUG]Scaler is RobustScaler, not CustomScaler, need to rerun.
+
+23_CGI7_tier2_NoRefit_age_CGI6: add age and CGI 6 as features to predict CGI 7. 
+   [BUG SOLVED]Changed back to CustomScaler.
+
+24_CGI6_tier2_rerun: rerun 21_CGI6_tier2_ComBat_GAMs_NoRefit with CustomXGBClassifier.
+
+25_CGI7_tier2_rerun: rerun 22_CGI7_tier2_ComBat_GAMs_NoRefit with CustomXGBClassifier.
+
+26_CGI6_tier2_balanced_accuracy: use eval_matrix = 'logloss' in XGBoost and scoring = 'balanced accuracy' in BayesSearchCV
+
+27_CGI7_tier2_balanced_accuracy: use eval_matrix = 'logloss' in XGBoost and scoring = 'balanced accuracy' in BayesSearchCV, using CGI 7 for the outcome prediction. 382 features: 380 MRI features + age + CGI 6.
+
+28_CGI6_tier2_44patients: 44 patients sensitivity analysis with CGI 6.
+
+29_CGI7_tier2_44patients: 44 patients sensitivity analysis with CGI 7.
+
+30_CGI7_tier2_23children: 23 children with CGI 7, 380 features, 5 selected, no ComBat, GAMs with DTI motion score, use eval_matrix = 'logloss' in XGBoost and scoring = 'balanced accuracy' in BayesSearchCV.
+[Due to lack of positive items, this attempt failed.]
+
+30_CGI7_tier2_24adults: 24 adults with CGI 7, 380 features, 5 selected, no ComBat, GAMs with DTI motion score, use eval_matrix = 'logloss' in XGBoost and scoring = 'balanced accuracy' in BayesSearchCV. 
+
+31_CGI6_tier2_45_Placebo: 45 placebo including adults and children. Using CGI 6 for prediction. 380 features, 7 features selected. RobustScaler, ComBat, GAMs with motion score. Use eval_matrix = 'logloss' in XGBoost and scoring = 'balanced accuracy' in BayesSearchCV.
+
+32_CGI6_tier2_45_Placebo_AUC: Using 45 placebo with CGI 6. ComBat with age. Scoring = 'AUC-ROC' in BayesSearchCV.
+
+33_CGI6_tier1_14ROI_AUC: Using tier 1 14 ROI with CGI 6. No feature selection. Scoring = 'AUC-ROC' in BayesSearchCV.
+
+34_CGI7_tier1_14ROI_AUC: Using tier 1 14 ROI with CGI 7. No feature selection. Scoring = 'AUC-ROC' in BayesSearchCV.
+
+35_CGI6_tier2_AUC_rerun: To test with the random seeds 42. The result are the same as 24_CGI6_tier2_rerun.
+
+36_44_CGI7_tier2_AUC_sensitivity: Using 44 MPH patients for sensitivity analysis with CGI 7. Scoring = 'AUC-ROC' in BayesSearchCV.
+
+37_23_CGI6_tier2_children_LR: using 23 MPH chilren with CGI 6. Logistic regression in both RFE and classifier. scoring = 'balanced accuracy' in BayesSearchCV.
+
+38_23_CGI6_tier2_children_LR_lasso: using 23 MPH children with CGI 6. No feature selection. Use 'l1' or 'l2' in classifier with logistic regression instead. Scoring = 'AUC-ROC' in BayesSearchCV.
+
+39_23_CGI6_tier2_children_XGBoost: using 23 MPH children with CGI 6. XGboost. No feature selection.
+
+40_24_CGI6_tier2_adults_LR_noselection: using 24 MPH adults with CGI 6. Logistic regression. No feature selection.
+
+41_24_CGI6_tier2_adults_XGBoost: Using 24 MPH adults with CGI 6. XGBoost. Normal pipeline (including feature selection).
+
+42_24_CGI6_tier2_adults_XGBoost_noselection: Using 24 MPH adults with CGI 6. XGBoost. No feature selection. ROC-AUC.
+
+43_24_CGI7_tier2_adults_XGBoost_noselection: Using 24 MPH adults with CGI 7. XGBoost. No feature selection. ROC-AUC.
+
+44_47_CGI6_tier2_XGBoost_noselection: Using 47 MPH adults with CGI 6. 380 features. XGBoost. No feature selection. ROC-AUC.
+
+45_47_CGI7_tier2_XGBoost: Using 47 MPH adults with CGI 7. 380 features. XGBoost. Select 7 features. ROC-AUC.
+
+46_47_tier1_BEST: Tier 1 BEST analysis and violin plots with different setup.
+
+47_47_CGI6_tier2_noGAMs: Rerun tier 2 with 47 MPH patients and CGI 6, 7/380 features, no GAMs for harmonisation.
+
+48_47_CGI6_tier2_noComBat_noGAMs: Rerun tier 2 with 47 MPH patients and CGI 6, 7/380 features, no GAMs and no ComBat for harmonisation.
+
+49_47_CGI6_tier2_wholeset_saveY: Rerun tier 2 with 47 MPH patients (standard setup), save the pred_y results but no scaler hyperparameter optimisation.
+
+50_47_CGI6_tier2_wholeset_saveY: Rerun tier 2 with 47 MPH patients (standard setup), save the pred_y results and have scaler hyperparameter optimisation.
+
+51_23_CGI6_tier2_wholeset_saveY: Rerun tier 2 with 23 MPH children patients (standard setup), save the pred_y results and have scaler hyperparameter optimisation. No feature selection.
+
+52_24_CGI6_tier2_wholeset_saveY: Rerun tier 2 with 24 MPH adults patients (standard setup), save the pred_y results and have scaler hyperparameter optimisation. No feature selection.
+
+53_47_CGI6_tier1_wholeset_saveY: Rerun tier 1 with 47 MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+54_47_CGI7_tier1_wholeset_saveY: Rerun tier 1 with 47 MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+55_44_CGI6_tier1_wholeset_saveY: Rerun tier 1 with 44 MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+56_44_CGI7_tier1_wholeset_saveY: Rerun tier 1 with 44 MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+57_23_CGI6_tier1_wholeset_saveY: Rerun tier 1 with 23 MPH children patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+58_24_CGI6_tier1_wholeset_saveY: Rerun tier 1 with 24 MPH adults patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+59_24_CGI7_tier1_wholeset_saveY: Rerun tier 1 with 24 MPH adults patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+60_24_CGI7_tier2_wholeset_saveY: [BUG] Rerun tier 2 with 24 adults MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+61_44_CGI6_tier2_wholeset_saveY: Rerun tier 2 with 44 MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+62_47_CGI7_tier2_wholeset_saveY: Rerun tier 2 with 47 MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+63_44_CGI7_tier2_wholeset_saveY: Rerun tier 2 with 44 MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation.
+
+64_24_CGI7_tier2_featureselection_wholeset_saveY: Rerun tier 2 with 24 adults MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation. Feature selection for 5.
+
+65_24_CGI6_tier2_featureselection_wholeset_saveY: Rerun tier 2 with 24 adults MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation. Feature selection for 5.
+ 
+66_23_CGI6_tier2_featureselection_wholeset_saveY: [BUG: feature_std > 0.3 = empty list] Rerun tier 2 with 23 children MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation. Feature selection for 5. non_zero_var_indices = X_non_nan.std(axis=0) > 0.2 (feature selection)
+
+67_24_CGI6_tier1_featureselection_wholeset_saveY: Rerun tier 1 with 24 adults MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results and have scaler hyperparameter optimisation. Feature selection for 5.
+
+68_24_CGI7_tier1_featureselection_wholeset_saveY: Rerun tier 1 with 24 adults MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation. Feature selection for 5.
+
+69_23_CGI6_tier1_featureselection_wholeset_saveY: [Bug-solved: no feature survive after removing the non-variant one - even the threshold of 0.1...]Rerun tier 1 with 23 children MPH patients (standard setup), CGI 6 for evaluation, save the pred_y results. Feature selection for 5. Non-variate: MAD > 0.001. No hyperparameter in RobustScaler.
+
+70_24_CGI7_tier2_wholeset_saveY: Rerun the bug 60. Rerun tier 2 with 24 adults MPH patients (standard setup), CGI 7 for evaluation, save the pred_y results and have scaler hyperparameter optimisation. No feature selection for subgroup.
+
+71_20_CGI6_tier1_featureselection_wholeset_saveY: Rerun tier 1 with 20 children (3 outliers excluded) and 14 ROIs (Tier 1). Standard setup, CGI 6 for evaluation, save the pred_y results. Feature selection for 4. Non-variate: MAD > 0.001. No hyperparameter in RobustScaler.
+
+72_20_CGI6_tier2_featureselection_wholeset_saveY: Rerun tier 2 with 20 children (3 outliers excluded) and 380 features (Tier 2). Standard setup, CGI 6 for evaluation, save the pred_y results. Feature selection for 4. Non-variate: MAD > 0.001. No hyperparameter in RobustScaler.
+
+73_20_CGI6_tier2_wholeset_saveY: Rerun tier 2 with 20 children (3 outliers excluded) and 380 features (Tier 2). Standard setup, CGI 6 for evaluation, save the pred_y results. No feature selection. No hyperparameter in RobustScaler.
+
+104_47_CGI_S_6_tier2_regresssion: Use imputed CGI-S-6 and Tier 2 data with 47 patients. XGBRegression. 91 feature selected.
+
+105_47_CGI_S_6_tier2_clf: Use imputed CGI-S-6 and Tier 2 data with 47 patients. Classification problem. (Responders<=3, non-responders>3). 7 feature selected.
+
+106_47_CGI_S_7_tier2_clf: Use Imputed CGI-S-7 and Tier 2 data with 47 patients. Classification problem. (Responders<=3, non-responders>3). 7 feature selected.
+
+107_39_CGI_S_6_tier2_clf: Use excluded missing value CGI-S-6 and Tier 2 data with 39 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+108_35_CGI_S_7_tier2_clf: Use excluded missing value CGI-S-7 and Tier 2 data with 35 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+109_47_CGI_S_6_tier1_clf: Use imputed CGI-S-6 and Tier 1 data with 47 patients. Classification problem. (Responders<=3, non-responders>3). 7 feature selected.
+
+110_47_CGI_S_7_tier1_clf: Use Imputed CGI-S-7 and Tier 1 data with 47 patients. Classification problem. (Responders<=3, non-responders>3). 7 feature selected.
+
+111_39_CGI_S_6_tier1_clf: Use excluded missing value CGI-S-6 and Tier 1 data with 39 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+112_35_CGI_S_7_tier1_clf: Use excluded missing value CGI-S-7 and Tier 1 data with 35 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+113_39_CGI_I_6_tier1_clf: Use excluded missing value CGI-I-6 and Tier 1 data with 39 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+114_39_CGI_I_7_tier1_clf: Use excluded missing value CGI-I-7 and Tier 1 data with 39 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+115_39_CGI_I_6_tier2_clf: Use excluded missing value CGI-I-6 and Tier 2 data with 39 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+116_39_CGI_I_7_tier2_clf: Use excluded missing value CGI-I-7 and Tier 2 data with 39 patients. Classification problem. (Responders<=3, non-responders>3). 6 feature selected.
+
+117_47_CGI_S_7_tier2_regression: Use imputed CGI-S-7 and Tier 2 data with 47 patients. XGBRegression. 11 feature selected.
+
+118_47_CGI_S_7_tier1_regression: Use imputed CGI-S-7 and Tier 1 data with 47 patients. XGBRegression. 11 feature selected.
+
+119_47_CGI_S_6_tier1_regression: Use imputed CGI-S-6 and Tier 1 data with 47 patients. XGBRegression. 11 feature selected.
+
+120_47_CGI_S_6_tier2_regression: Use imputed CGI-S-6 and Tier 2 data with 47 patients. XGBRegression. 51 feature selected.
+
+121_47_CGI_S_7_tier1_regression_no_selection: Use imputed CGI-S-7 and Tier 1 data with 47 patients. XGBRegression. All 14 feature are used.
+
+122_47_CGI_S_7_tier1_regression_optimization: Bug.
+
+123_24_ADHD_RS_DT_remission_tier1_classification: Using new imputed ADHD_RS_DT(during treatment) scale and remission is <=18. Binary classification with XGBoost. 24 Adults. All 14 Tier 1 features are used.
+
+124_24_ADHD_RS_PT_remission_tier1_classification: Using new imputed ADHD_RS_PT(post-treatment) scale and remission is <=18. Binary classification with XGBoost. 24 Adults. All 14 Tier 1 features are used.
+
+125_24_ADHD_RS_PT_remission_tier2_classification: Using new imputed ADHD_RS_PT(post-treatment) scale and remission is <=18. Binary classification with XGBoost. 24 Adults. All 380 Tier 2 features are used.
+
+126_24_ADHD_RS_DT_remission_tier2_classification: Using new imputed ADHD_RS_DT(during treatment) scale and remission is <=18. Binary classification with XGBoost. 24 Adults. All 380 Tier 2 features are used.
+
+127_21_ADHD_RS_DT_remission_tier1_classification: Using excluded missing value ADHD_RS_DT(during treatment) scale and remission is <=18. Binary classification with XGBoost. 21 Adults. All 14 Tier 1 features are used.
+
+128_20_ADHD_RS_PT_remission_tier1_classification: Using excluded missing value ADHD_RS_PT(post treatment) scale and remission is <=18. Binary classification with XGBoost. 20 Adults. All 14 Tier 1 features are used.
+
+129_20_ADHD_RS_PT_remission_tier2_classification: Using excluded missing value ADHD_RS_PT(post treatment) scale and remission is <=18. Binary classification with XGBoost. 20 Adults. All 380 Tier 2 features are used.
+
+130_21_ADHD_RS_DT_remission_tier2_classification: Using excluded missing value ADHD_RS_DT(during treatment) scale and remission is <=18. Binary classification with XGBoost. 21 Adults. All 380 Tier 2 features are used.
+
+131_17_CGII6_tier1_classification_Ch_Ex: Using excluded missing value CGI-I-6 in 17 children subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+132_17_CGII6_tier2_classification_Ch_Ex: Using excluded missing value CGI-I-6 in 17 children subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+133_22_CGII6_tier1_classification_Ad_Ex: Using excluded missing value CGI-I-6 in 22 adults subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+134_22_CGII6_tier2_classification_Ad_Ex: Using excluded missing value CGI-I-6 in 22 adults subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+135_18_CGII7_tier1_classification_Ch_Ex: Using excluded missing value CGI-I-7 in 18 children subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used. Using Balanced accuracy in Bayesopt instead of roc-auc.
+
+136_18_CGII7_tier2_classification_Ch_Ex: Using excluded missing value CGI-I-7 in 18 children subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used. Using Balanced accuracy in Bayesopt instead of roc-auc.
+
+137_21_CGII7_tier1_classification_Ad_Ex: Using excluded missing value CGI-I-7 in 21 adults subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+138_21_CGII7_tier2_classification_Ad_Ex: Using excluded missing value CGI-I-7 in 21 adults subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+139_17_CGIS6_tier1_classification_Ch_Ex: Using excluded missing value CGI-S-6 in 17 children subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+140_17_CGIS6_tier2_classification_Ch_Ex: Using excluded missing value CGI-S-6 in 17 children subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+141_22_CGIS6_tier1_classification_Ad_Ex: Using excluded missing value CGI-S-6 in 22 adults subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+142_22_CGIS6_tier2_classification_Ad_Ex: Using excluded missing value CGI-S-6 in 22 adults subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+143_18_CGIS7_tier1_classification_Ch_Ex: Using excluded missing value CGI-S-7 in 18 children subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+144_18_CGIS7_tier2_classification_Ch_Ex: Using excluded missing value CGI-S-7 in 18 children subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+145_17_CGIS7_tier1_classification_Ad_Ex: Using excluded missing value CGI-S-7 in 17 adults subgroup analysis. Binary classification with XGBoost.All 14 Tier 1 features are used.
+
+146_17_CGIS7_tier2_classification_Ad_Ex: Using excluded missing value CGI-S-7 in 17 adults subgroup analysis. Binary classification with XGBoost.All 380 Tier 2 features are used.
+
+147_23_CGIS6_tier1_classification_Ch_Im: Using imputed missing value CGI-S-6 in 23 children subgroup analysis. Binary classification with XGBoost. All 14 Tier 1 features are used.
+
+148_23_CGIS6_tier2_classification_Ch_Im: Using imputed missing value CGI-S-6 in 23 children subgroup analysis. Binary classification with XGBoost. All 380 Tier 2 features are used.
+
+149_23_CGIS7_tier1_classification_Ch_Im: Using imputed missing value CGI-S-7 in 23 children subgroup analysis. Binary classification with XGBoost. All 14 Tier 1 features are used.
+
+150_23_CGIS7_tier2_classification_Ch_Im: Using imputed missing value CGI-S-7 in 23 children subgroup analysis. Binary classification with XGBoost. All 380 Tier 2 features are used.
+
+151_24_CGIS6_tier1_classification_Ad_Im: Using imputed missing value CGI-S-6 in 24 adults subgroup analysis. Binary classification with XGBoost. All 14 Tier 1 features are used.
+
+152_24_CGIS6_tier2_classification_Ad_Im: Using imputed missing value CGI-S-6 in 24 adults subgroup analysis. Binary classification with XGBoost. All 380 Tier 2 features are used.
+
+153_24_CGIS7_tier1_classification_Ad_Im: Using imputed missing value CGI-S-7 in 24 adults subgroup analysis. Binary classification with XGBoost. All 14 Tier 1 features are used.
+ 
+154_24_CGIS7_tier2_classification_Ad_Im: Using imputed missing value CGI-S-7 in 24 adults subgroup analysis. Binary classification with XGBoost. All 380 Tier 2 features are used.
+
+155_23_CGII7_tier1_classification_Ch_Im: Using imputed missing value CGI-I-7 in 23 children subgroup analysis. Binary classification with XGBoost. All 14 Tier 1 features are used. Using Balanced accuracy in Bayesopt instead of roc-auc.
+
+156_23_CGII7_tier2_classification_Ch_Im: Using imputed missing value CGI-I-7 in 23 children subgroup analysis. Binary classification with XGBoost. All 380 Tier 2 features are used. Using Balanced accuracy in Bayesopt instead of roc-auc.
+
+157_24_ADHD_RS_DT_tier1_classification_featureselection: Using new imputed ADHD_RS_DT(during treatment) scale and remission is <=18. Binary classification with XGBoost. 24 Adults. 5 features of Tier 1 are selected.
+
+158_24_ADHD_RS_DT_tier2_classification_featureselection: Using new imputed ADHD_RS_DT(during treatment) scale and remission is <=18. Binary classification with XGBoost. 24 Adults. 5 features aof Tier 2 re selected.
+
+159_23_VVGK_A_DT_change_tier1_regression: Using new imputed VVGK_A_DT (during treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 1 features. corr_th=0.9.
+
+160_23_VVGK_A_change_tier2_regression: Using new imputed VVGK_A_DT (during treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 2 features.   corr_th=0.9.
+
+161_23_VVGK_A_PT_change_tier1_regression:Using new imputed VVGK_A_PT (post treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 2 features.  corr_th=0.9.
+
+162_23_VVGK_A_PT_change_tier2_regression: Using new imputed VVGK_A_PT (post treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 2 features.  mad_values > 0.001. corr_th=0.9.
+
+163_23_VVGK_H_DT_change_tier2_regression: Using new imputed VVGK_H_DT (during treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 2 features.  mad_values > 0.001. corr_th=0.9.
+
+164_23_VVGK_H_PT_change_tier2_regression: Using new imputed VVGK_H_PT (post treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 2 features.  mad_values > 0.001. corr_th=0.9.
+
+165_23_VVGK_H_DT_change_tier1_regression: Using new imputed VVGK_H_DT (during treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 1 features.  mad_values > 0.001. corr_th=0.9.
+
+166_23_VVGK_H_PT_change_tier1_regression: Using new imputed VVGK_H_PT (post treatment) scale. Regression with XGBoost. 23 children. Dynamic feature selection with Tier 1 features.  mad_values > 0.001. corr_th=0.9.
+
+167_47_CGII_6_tier1_noFS: Using imputed missing value CGI-I-6 in 47 total cohort analysis. Binary classification with XGBoost. All 14 Tier 1 features are used. No feature selection.
+
+168_47_CGII_7_tier1_noFS: Using imputed missing value CGI-I-7 in 47 total cohort analysis. Binary classification with XGBoost. All 14 Tier 1 features are used. No feature selection.
+
+169_47_CGII_6_tier2_noFS: Using imputed missing value CGI-I-6 in 47 total cohort analysis. Binary classification with XGBoost. All 380 Tier 2 features are used. No feature selection.
+
+170_47_CGII_7_tier2_noFS: Using imputed missing value CGI-I-7 in 47 total cohort analysis. Binary classification with XGBoost. All 380 Tier 2 features are used. No feature selection.
+
